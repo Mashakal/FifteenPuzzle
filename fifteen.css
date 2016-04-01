@@ -1,0 +1,15 @@
+#puzzlearea {
+    width: 400px;
+    height: 400px;
+    font-size: 0px; /* Removes the space created from newlines in children inline-block elements */
+    background-image: url(background.jpg);
+}
+
+
+/* TILE CLASS */
+.tile {
+    border: 5px solid black;
+    width: 90px;
+    height: 90px;
+    display: inline-table;
+}
