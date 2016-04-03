@@ -1,5 +1,5 @@
 /*global console*/
-/*jslint*/
+/*jslint */
 
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
@@ -161,9 +161,9 @@ var gameBoard = (function () {
         gameBoard.init(boardId);
 
         // Get movable tiles when mouse is clicked
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             var target = e.target || e.srcElement;
-            if(target.classList.contains("tileNumber")){
+            if (target.classList.contains("tileNumber")) {
                 console.log(target);
                 // Prints out tile number
                 console.log(target.innerHTML);
