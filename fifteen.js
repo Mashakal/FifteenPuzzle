@@ -1,6 +1,7 @@
 /*global console*/
 /*jslint */
 
+
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
     "use strict";
@@ -24,6 +25,43 @@ var gameBoard = (function () {
     
     
     /* PRIVATE FUNCTIONS */
+    
+    // Returns the tile object holding the tile element that was clicked on.
+    function getThisTile(pElement) {
+        var i;      // Loop variable.
+        
+        // Search the tile's array for pElement
+        for (i = 0; i < board.allTiles.length; i += 1) {
+            if (board.allTiles[i].element === pElement) {
+                return board.allTiles[i];
+            }
+        }
+        return undefined;
+    }
+    
+    
+    // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
+    function getMoveableTiles(pTile) {
+        
+        
+    }
+    
+    
+    // Moves the tiles.
+    function moveTiles(pTiles) {
+        
+    }
+    
+    
+    // Called when a tile element is clicked on.
+    function onTileClick() {
+        // Find the appropriate tile object.
+        getThisTile(this);
+        // Determine moveable tiles.
+        getMoveableTiles();
+        // If there are moveable tiles, move them.
+        moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
+    }
     
     // Create slots for the board.
     function createSlot(rowIndex, colIndex) {
@@ -79,10 +117,12 @@ var gameBoard = (function () {
         setBackgroundPosition(tile, colIndex, rowIndex);
         // Render the tile's displayText value.
         createTileDisplay(tile);
+        // Add the tile on click listener.
+        tile.element.onclick = onTileClick;
         return tile;
     }
     
-    
+
     // Manages the creation of the slots.
     function initSlots() {
         var slot,       // The slot object being created.
@@ -118,24 +158,6 @@ var gameBoard = (function () {
                 }
             }
         }
-    }
-    
-    
-    // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
-    function getMoveableTiles(pTile) {
-        // Go 100 pixels in each direction to find empty slot
-        
-    }
-    
-    
-    // Called when a tile element is clicked on.
-    function onTileClick() {
-        // Find the appropriate tile element.
-        getThisTile();
-        // Determine moveable tiles.
-        getMoveableTiles();
-        // If there are moveable tiles, move them.
-        moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
     }
     
     
