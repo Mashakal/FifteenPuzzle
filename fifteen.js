@@ -1,7 +1,6 @@
 /*global console*/
 /*jslint */
 
-
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
     "use strict";
@@ -29,7 +28,7 @@ var gameBoard = (function () {
     // Returns the tile object holding the tile element that was clicked on.
     function getThisTile(pElement) {
         var i;      // Loop variable.
-        
+        console.log("tile selected");
         // Search the tile's array for pElement
         for (i = 0; i < board.allTiles.length; i += 1) {
             if (board.allTiles[i].element === pElement) {
@@ -39,28 +38,31 @@ var gameBoard = (function () {
         return undefined;
     }
     
-    
     // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
     function getMoveableTiles(pTile) {
-        
-        
+        var i;   //Loop variable
+        console.log("Movable tiles for tile " + pTile);
+        // if the tile that was clciked on is next to an empty space call moveTiles
+        if () {
+           
+        }//else do nothing
     }
-    
     
     // Moves the tiles.
     function moveTiles(pTiles) {
         
     }
     
-    
     // Called when a tile element is clicked on.
     function onTileClick() {
+        console.log("Clicked!");
         // Find the appropriate tile object.
-        getThisTile(this);
+        var clickedTile = getThisTile(this);
+        var clickedTileNumber = clickedTile.displayText
         // Determine moveable tiles.
-        getMoveableTiles();
+        getMoveableTiles(clickedTileNumber);
         // If there are moveable tiles, move them.
-        moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
+        // moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
     }
     
     // Create slots for the board.
@@ -194,21 +196,6 @@ var gameBoard = (function () {
         
         // Create the game board.
         gameBoard.init(boardId);
-
-        // Get movable tiles when mouse is clicked
-        document.addEventListener('click', function (e) {
-            var target = e.target || e.srcElement;
-            if (target.classList.contains("tileNumber")) {
-                console.log(target);
-                // Prints out tile number
-                console.log(target.innerHTML);
-            }
-                // target.style.visibility = 'hidden';
-            // if(e.target === "object HTMLParagraphElement"){
-            //     console.log("you clicked on " + e.target + ".");
-            // }
-        });
-        
     };
 
     
