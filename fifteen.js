@@ -27,8 +27,7 @@ var gameBoard = (function () {
     
     // Returns the tile object holding the tile element that was clicked on.
     function getThisTile(pElement) {
-        var i;      // Loop variable.
-        console.log("tile selected");
+        var i;      // Loop variable
         // Search the tile's array for pElement
         for (i = 0; i < board.allTiles.length; i += 1) {
             if (board.allTiles[i].element === pElement) {
@@ -42,10 +41,64 @@ var gameBoard = (function () {
     function getMoveableTiles(pTile) {
         var i;   //Loop variable
         console.log("Movable tiles for tile " + pTile);
-        // if the tile that was clciked on is next to an empty space call moveTiles
-        if () {
-           
-        }//else do nothing
+        // Check 3 sides for the following 4 ifs
+        if(pTile.row === 0){
+            // Don't check any higher, top row
+            if(pTile.row + 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else if(ptile.column + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(pTile.column - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else{
+                // no empty slot found
+            }
+        } else if(pTile.row === 3){
+            // don't check any lower, bottom row
+            if(pTile.row - 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(ptile.column + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(pTile.column - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else{
+                // no empty slot found
+            }
+        }else if(pTile.column === 0){
+            // don't check to the left, first column
+            if(pTile.row + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(pTile.row - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else if(ptile.column + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else{
+                // no empty slot found
+            }
+        }else if(pTile.column === 3){
+            // don't check to the right, last
+            if(pTile.row + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(pTile.row - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else if(pTile.column - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else{
+                // no empty slot found
+            }
+        }else{ // check all 4 sides of the tile
+            if(pTile.row + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(pTile.row - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else if(ptile.column + 1 === emptySlot){
+                // found empty slot at (row + 1, column)
+            }else if(pTile.column - 1 === emptySlot){
+                // found empty slot at (row - 1, column)
+            }else{
+                // no empty slot found
+            }
+        }
     }
     
     // Moves the tiles.
@@ -58,6 +111,7 @@ var gameBoard = (function () {
         console.log("Clicked!");
         // Find the appropriate tile object.
         var clickedTile = getThisTile(this);
+        console.log(clickedTile);
         var clickedTileNumber = clickedTile.displayText
         // Determine moveable tiles.
         getMoveableTiles(clickedTileNumber);
@@ -161,7 +215,6 @@ var gameBoard = (function () {
             }
         }
     }
-    
     
     /* PUBLIC FUNCTIONS */
     
