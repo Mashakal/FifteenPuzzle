@@ -1,5 +1,5 @@
 /*global console*/
-/*jslint */
+/*jslint*/
 
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
@@ -38,14 +38,12 @@ var gameBoard = (function () {
         return slot;
     }
     
-    
     // Sets the background image position for the element passed in given the indexes.
     function setBackgroundPosition(pTile, cIndex, rIndex) {
-        var backX = ((cIndex % colSlots) * -tileLength).toString() + "px",
-            backY = ((rIndex % rowSlots) * -tileLength).toString() + "px";
-        pTile.element.style.backgroundPosition = backX + " " + backY;
+        var backgroundX = ((cIndex % colSlots) * -tileLength).toString() + "px",
+            backgroundY = ((rIndex % rowSlots) * -tileLength).toString() + "px";
+        pTile.element.style.backgroundPosition = backgroundX + " " + backgroundY;
     }
-    
     
     // Insert a textNode representing the tile number into the tile.
     function createTileDisplay(pTile) {
@@ -57,7 +55,6 @@ var gameBoard = (function () {
         // Append it to the tile.
         pTile.element.appendChild(node);
     }
-    
     
     // Creates and returns a tile object.
     function createTile(colIndex, rowIndex) {
@@ -126,7 +123,8 @@ var gameBoard = (function () {
     
     // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
     function getMoveableTiles(pTile) {
-        
+        // Go 100 pixels in each direction to find empty slot
+
     }
     
     
@@ -148,8 +146,6 @@ var gameBoard = (function () {
         pTile.element.style.top = (pTile.y + slotBorderWidth).toString() + "px";
         pTile.element.style.left = (pTile.x + slotBorderWidth).toString() + "px";
     };
-    
-    
     return board;
 }());
     
@@ -163,7 +159,22 @@ var gameBoard = (function () {
         
         // Create the game board.
         gameBoard.init(boardId);
+
+        // Get movable tiles when mouse is clicked
+        document.addEventListener('click', function(e) {
+            var target = e.target || e.srcElement;
+            if(target.classList.contains("tileNumber")){
+                console.log(target);
+                // Prints out tile number
+                console.log(target.innerHTML);
+            }
+                // target.style.visibility = 'hidden';
+            // if(e.target === "object HTMLParagraphElement"){
+            //     console.log("you clicked on " + e.target + ".");
+            // }
+        });
         
     };
+
     
 }());
