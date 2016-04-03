@@ -11,7 +11,7 @@
     background: url(background.jpg);
     width: 90px;
     height: 90px;
-    position: absolute;
+/*    position: absolute;*/
     display: inline-block;
 }
 .tileNumber {
@@ -22,6 +22,7 @@
     margin: auto;
 }
 .slot {
+    position: absolute;
     width: 98px;
     height: 98px;
     border: 1px solid white;

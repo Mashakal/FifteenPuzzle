@@ -9,10 +9,9 @@ var gameBoard = (function () {
     var board = {},                 // The object to return.
         rowSlots = 4,               // How many slots are displayed per row.
         colSlots = 4,               // How many slots are displayed per column.
-        tileLength = 100,           // The width/height of a tile in pixels.
+        tileLength = 100,           // The width/height of a slot/tile in pixels.
         tileCount,                  // How many tiles should be made.
-        slotBorderWidth = 1,        // How many pixels wide the slot border is.
-        puzzleArea;                 // The div element that will hold the game board.1
+        puzzleArea;                 // The div element that will hold the game board.
     
     // Always leave one empty slot for maneuvering tiles.
     tileCount = colSlots * rowSlots - 1;
@@ -27,16 +26,22 @@ var gameBoard = (function () {
     /* PRIVATE FUNCTIONS */
     
     // Create slots for the board.
-    function createSlot(indexValue) {
+    function createSlot(rowIndex, colIndex) {
         var slot = {},
             i;
         
         slot.element = document.createElement("div");
         slot.element.setAttribute("class", "slot");
-        slot.index = indexValue;
-                
+        // Index is always equal to the position within allSlots array.
+        slot.index = board.allSlots.length;
+        // Set the position of this slot based on its column and row indices.
+        slot.x = (colIndex % colSlots) * tileLength;
+        slot.y = (rowIndex % rowSlots) * tileLength;
+        // Update the position of this slot within the parent.
+        board.updateSlotPosition(slot);
         return slot;
     }
+    
     
     // Sets the background image position for the element passed in given the indexes.
     function setBackgroundPosition(pTile, cIndex, rIndex) {
@@ -44,6 +49,7 @@ var gameBoard = (function () {
             backgroundY = ((rIndex % rowSlots) * -tileLength).toString() + "px";
         pTile.element.style.backgroundPosition = backgroundX + " " + backgroundY;
     }
+    
     
     // Insert a textNode representing the tile number into the tile.
     function createTileDisplay(pTile) {
@@ -56,29 +62,23 @@ var gameBoard = (function () {
         pTile.element.appendChild(node);
     }
     
+    
     // Creates and returns a tile object.
-    function createTile(colIndex, rowIndex) {
-        var tile = {};              // The tile object that will be returned.
+    function createTile(rowIndex, colIndex) {
+        var tile = {};      // The tile object that will be returned.
         
-        // Create the outer div for aesthetic purposes (different border color).
         tile.element = document.createElement("div");
         tile.element.setAttribute("class", "tile");
-        // The correct slot for this tile.
+        // The correct slot for this tile starts at this tile's count.
         tile.correctSlot = board.allTiles.length;
         // Initially, the tile is in the correct slot.
         tile.currentSlot = board.allTiles.length;
         // Index starts at 0, value starts at 1.
         tile.displayText = (board.allTiles.length + 1).toString();
-        // Determine the x position for this tile.
-        tile.x = (colIndex % colSlots) * tileLength;
-        tile.y = (rowIndex % rowSlots) * tileLength;
-        // Update this tile's position on the game board.
-        board.updateTilePosition(tile);
         // Set the background position for this tile.
         setBackgroundPosition(tile, colIndex, rowIndex);
         // Render the tile's displayText value.
         createTileDisplay(tile);
-        
         return tile;
     }
     
@@ -103,12 +103,12 @@ var gameBoard = (function () {
     // Manages the creation of tiles, requires slots to be initialized first.
     function initTiles() {
         var tile,       // The tile object.
-            i,
-            j;       // Loop variables.
+            i,          // Loop variables.
+            j;
         
         for (i = 0; i < rowSlots; i += 1) {
             for (j = 0; j < colSlots; j += 1) {
-                tile = createTile(j, i);
+                tile = createTile(i, j);
                 board.allSlots[board.allTiles.length].tile = tile;
                 board.allSlots[board.allTiles.length].element.appendChild(tile.element);
                 board.allTiles.push(tile);
@@ -124,7 +124,18 @@ var gameBoard = (function () {
     // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
     function getMoveableTiles(pTile) {
         // Go 100 pixels in each direction to find empty slot
-
+        
+    }
+    
+    
+    // Called when a tile element is clicked on.
+    function onTileClick() {
+        // Find the appropriate tile element.
+        getThisTile();
+        // Determine moveable tiles.
+        getMoveableTiles();
+        // If there are moveable tiles, move them.
+        moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
     }
     
     
@@ -141,11 +152,13 @@ var gameBoard = (function () {
     };
     
     
-    // Update the pixel location of the tile passed in.
-    board.updateTilePosition = function (pTile) {
-        pTile.element.style.top = (pTile.y + slotBorderWidth).toString() + "px";
-        pTile.element.style.left = (pTile.x + slotBorderWidth).toString() + "px";
+    // Update the pixel location of the slot passed in.
+    board.updateSlotPosition = function (pSlot) {
+        pSlot.element.style.top = (pSlot.y).toString() + "px";
+        pSlot.element.style.left = (pSlot.x).toString() + "px";
     };
+    
+    
     return board;
 }());
     
