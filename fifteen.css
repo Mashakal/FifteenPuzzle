@@ -1,8 +1,23 @@
+@font-face {
+    font-family: redRessed;
+    src:url("Fonts/redressed/Redressed.ttf");
+}
+/*Heading font*/
+@font-face {
+    font-family: yellowTail;
+    src:url("Fonts/yellowtail/Yellowtail-Regular.otf");
+}
 body{
     width: 600px;
-    font-size: 14pt;
     margin: 0 auto;
+    font-size: 14pt;
     text-align: center;
+}
+body p{
+    font-family: redRessed;
+}
+h1{
+    font-family: yellowTail;
 }
 #puzzlearea {
     width: 400px;
@@ -23,7 +38,7 @@ body{
 }
 .tileNumber {
     text-align: center;
-    font-size: 40px;
+    font-size: 40pt;
     font-family: cursive;
     line-height: 90px;
     margin: auto;
