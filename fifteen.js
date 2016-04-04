@@ -161,13 +161,9 @@ var gameBoard = (function () {
 
     // Tiles that can move should have a red border
     function onHover(){
-        console.log("You've hovered");
-
         var movableInfo,
-            hoveredOver,
-            hoveredTile;
-
-            
+            hoveredTile; 
+        // Get the tile properties from the one that was hovered over
         hoveredTile = getThisTile(this);
         // Get an array of movable tiles
         movableInfo = getMovableInfo(hoveredTile);
@@ -177,13 +173,12 @@ var gameBoard = (function () {
             // Make the border red
             // pMovableInfo.slots[i].element.style.borderColor = "red";
             this.style.borderColor = "red";
-            hoveredOver = true;
         }
     }
 
     // Make the border black again
+    // Could only target the ones that were movable but this works for now
     function onHoverExit(){
-        console.log("You've exited");
         this.style.borderColor = "black";
     }
 
