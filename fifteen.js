@@ -173,6 +173,7 @@ var gameBoard = (function () {
             // Make the border red
             // pMovableInfo.slots[i].element.style.borderColor = "red";
             this.style.borderColor = "red";
+            this.style.cursor = "pointer";
         }
     }
 
