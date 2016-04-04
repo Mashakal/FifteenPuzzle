@@ -38,7 +38,6 @@ var gameBoard = (function () {
         return undefined;
     }
     
-    
     // THIS FUNCTION IS PROBABLY NOT NECESSARY.
     // Returns the slot that holds the passed in tile object or undefined if the tile is not found.
     function getSlotGivenTile(pTile) {
@@ -52,7 +51,6 @@ var gameBoard = (function () {
         }
         return undefined;
     }
-    
     
     // Returns the slot located at position pRow, pColumn.
     function getSlotGivenIndices(pRow, pColumn) {
@@ -76,7 +74,7 @@ var gameBoard = (function () {
         // Check if pTile and emptySlot are in the same row.
         if (pTile.currentRow === emptySlot.row) {
             // Add the slot that holds pTile the array of moveable tile's slots.
-            slots.push(board.allSlots[pTile.currentSlot]);
+            slots.push(pTile.currentSlot);
             // How many slots hold tiles between pTile and emptySlot, including pTile.
             numSlots = Math.abs((emptySlot.column - pTile.currentColumn));
             // Determine delta based on emptySlot being farther left or right.
@@ -90,12 +88,11 @@ var gameBoard = (function () {
         // Check if pTile and emptySlot are in the same column.
         } else if (pTile.currentColumn === emptySlot.column) {
             // Add the slot that holds pTile to the array of moveable slots.
-            slots.push(board.allSlots[pTile.currentSlot]);
+            slots.push(pTile.currentSlot);
             // How many slots hold tiles between pTile and emptySlot, including pTile.
             numSlots = Math.abs((emptySlot.row - pTile.currentRow));
             // Determine delta based on emptySlot being farther up or down.
             delta = emptySlot.row - pTile.currentRow > 0 ? 1 : -1;
-            console.log("Delta is: " + delta);
             // Add additional moveable tile's slots that are also in this column.
             for (i = 1; i < numSlots; i += 1) {
                 slots.push(getSlotGivenIndices(pTile.currentRow + delta * i, pTile.currentColumn));
@@ -111,11 +108,39 @@ var gameBoard = (function () {
         info.direction = direction;
         return info;
     }
-
     
+    
+    // Updates a slot's tile information to match the slot.
+    function updateTileInfo(pSlot) {
+        pSlot.tile.currentSlot = pSlot;
+        pSlot.tile.currentColumn = pSlot.column;
+        pSlot.tile.currentRow = pSlot.row;
+    }
+    
+    // Moves the tile in pFirst to pSecond, does not save the tile of pSecond.
+    function swapWithEmpty(pSlot) {
+        var tempTile,
+            tempSlot;
+
+        tempTile = pSlot.tile;
+        pSlot.tile = emptySlot.tile;
+        emptySlot.tile = tempTile;
+        
+        tempSlot = pSlot;
+        pSlot = emptySlot;
+        emptySlot = tempSlot;
+        
+        pSlot.element.appendChild(pSlot.tile.element);
+        updateTileInfo(pSlot);
+    }
+
     // Moves the tiles.
     function moveTiles(pMovableInfo) {
+        var i;          // Loop variable.
         
+        for (i = pMovableInfo.slots.length - 1; i >= 0; i -= 1) {
+            swapWithEmpty(pMovableInfo.slots[i]);
+        }
     }
     
     // Called when a tile element is clicked on.
@@ -128,9 +153,10 @@ var gameBoard = (function () {
         // Get movable information.
         movableInfo = getMovableInfo(clickedTile);
         // If there are moveable tiles, move them.
-        // moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
+        if (typeof movableInfo !== "undefined") {
+            moveTiles(movableInfo);
+        }
     }
-    
     
     // Update the pixel location of the slot passed in.
     function updateSlotPosition(pSlot) {
@@ -158,14 +184,12 @@ var gameBoard = (function () {
         return slot;
     }
     
-    
     // Sets the background image position for the element passed in given the indexes.
     function setBackgroundPosition(pTile, cIndex, rIndex) {
         var backgroundX = ((cIndex % colSlots) * -tileLength).toString() + "px",
             backgroundY = ((rIndex % rowSlots) * -tileLength).toString() + "px";
         pTile.element.style.backgroundPosition = backgroundX + " " + backgroundY;
     }
-    
     
     // Insert a textNode representing the tile number into the tile.
     function createTileDisplay(pTile) {
@@ -178,7 +202,6 @@ var gameBoard = (function () {
         pTile.element.appendChild(node);
     }
     
-    
     // Creates and returns a tile object.
     function createTile(rowIndex, colIndex) {
         var tile = {};      // The tile object that will be returned.
@@ -186,9 +209,9 @@ var gameBoard = (function () {
         tile.element = document.createElement("div");
         tile.element.setAttribute("class", "tile");
         // The correct slot for this tile starts at this tile's count.
-        tile.correctSlot = board.allTiles.length;
+        tile.correctSlot = board.allSlots[board.allTiles.length];
         // Initially, the tile is in the correct slot.
-        tile.currentSlot = board.allTiles.length;
+        tile.currentSlot = board.allSlots[board.allTiles.length];
         // Index starts at 0, value starts at 1.
         tile.displayText = (board.allTiles.length + 1).toString();
         // Set the current row and column index for this tile.
@@ -203,7 +226,6 @@ var gameBoard = (function () {
         return tile;
     }
     
-
     // Manages the creation of the slots.
     function initSlots() {
         var slot,       // The slot object being created.
@@ -221,7 +243,6 @@ var gameBoard = (function () {
         // The last slot is always the empty slot to start.
         emptySlot = board.allSlots[tileCount];
     }
-    
     
     // Manages the creation of tiles, requires slots to be initialized first.
     function initTiles() {
@@ -242,6 +263,7 @@ var gameBoard = (function () {
             }
         }
     }
+    
     
     /* PUBLIC FUNCTIONS */
     
