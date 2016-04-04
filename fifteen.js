@@ -12,6 +12,7 @@ var gameBoard = (function () {
         tileLength = 100,           // The width/height of a slot/tile in pixels.
         tileCount,                  // How many tiles should be made.
         emptySlot,                  // The empty slot on the board.
+        shuffleButton,              // A reference to the game's shuffle button.
         puzzleArea;                 // The div element that will hold the game board.
     
     // Always leave one empty slot for maneuvering tiles.
@@ -264,19 +265,66 @@ var gameBoard = (function () {
         }
     }
     
+    // Gets the slots adjacent to the slot passed in.
+    function getAdjacentSlots(pSlot) {
+        var eligibles = [];
+        
+        // Get the slot above pSlot, if there is one.
+        if (pSlot.row > 0) {
+            eligibles.push(getSlotGivenIndices(pSlot.row - 1, pSlot.column));
+        }
+        // Get the slot below pSlot, if there is one.
+        if (pSlot.row < rowSlots - 1) {
+            eligibles.push(getSlotGivenIndices(pSlot.row + 1, pSlot.column));
+        }
+        // Get the slot to the left of pSlot, if there is one.
+        if (pSlot.column > 0) {
+            eligibles.push(getSlotGivenIndices(pSlot.row, pSlot.column - 1));
+        }
+        // Get the slot to the right of pSlot, if there is one.
+        if (pSlot.column < colSlots - 1) {
+            eligibles.push(getSlotGivenIndices(pSlot.row, pSlot.column + 1));
+        }
+        
+        return eligibles;
+    }
+    
+    // Sets up the shuffle button for game play.
+    function initShuffle() {
+        var swapIterations = 1000,      // How many times to move the emptySlot.
+            eligibleSlots,              // An array of eligible slots to swap with the empty slot.
+            slotToSwap,                 // A randomly chosen slot from eligibleSlots.
+            i;                          // Loop variable.
+        
+        // The onclick listener for the shuffle button.
+        shuffleButton.onclick = function () {
+            for (i = 0; i < swapIterations; i += 1) {
+                // Find adjacent slots.
+                eligibleSlots = getAdjacentSlots(emptySlot);
+                console.log(eligibleSlots);
+                // Choose one at random.
+                slotToSwap = eligibleSlots[Math.floor(Math.random() * eligibleSlots.length)];
+                swapWithEmpty(slotToSwap);
+            }
+        };
+    }
+    
     
     /* PUBLIC FUNCTIONS */
     
     // Creates the game board.
-    board.init = function (boardId) {
-        // Initialize the global puzzleArea.
+    board.init = function (boardId, shuffleId) {
+        // Initialize the global variables.
         puzzleArea = document.getElementById(boardId);
+        shuffleButton = document.getElementById(shuffleId);
         // Initialize the slots.
         initSlots();
         // Initialize the tiles.
         initTiles();
+        // Initialize the shuffle items.
+        initShuffle();
     };
-    
+
     
     return board;
 }());
@@ -287,10 +335,11 @@ var gameBoard = (function () {
     "use strict";
     
     window.onload = function () {
-        var boardId = "puzzlearea";     // The element ID of the board div.
+        var boardId = "puzzlearea",         // The element ID of the board div.
+            shuffleId = "shufflebutton";    // The shuffle button of the game board.
         
         // Create the game board.
-        gameBoard.init(boardId);
+        gameBoard.init(boardId, shuffleId);
     };
 
 }());
