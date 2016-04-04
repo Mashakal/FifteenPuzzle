@@ -98,7 +98,6 @@ var gameBoard = (function () {
             console.log("Delta is: " + delta);
             // Add additional moveable tile's slots that are also in this column.
             for (i = 1; i < numSlots; i += 1) {
-                console.log(pTile.currentRow + delta * i);
                 slots.push(getSlotGivenIndices(pTile.currentRow + delta * i, pTile.currentColumn));
             }
             // Set the direction for movement between columns.
@@ -128,7 +127,6 @@ var gameBoard = (function () {
         clickedTile = getThisTile(this);
         // Get movable information.
         movableInfo = getMovableInfo(clickedTile);
-        console.log(movableInfo);
         // If there are moveable tiles, move them.
         // moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
     }
