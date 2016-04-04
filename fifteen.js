@@ -1,5 +1,5 @@
 /*global console*/
-/*jslint */
+/*jslint*/
 
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
@@ -158,7 +158,35 @@ var gameBoard = (function () {
             moveTiles(movableInfo);
         }
     }
-    
+
+    // Tiles that can move should have a red border
+    function onHover(){
+        console.log("You've hovered");
+
+        var movableInfo,
+            hoveredOver,
+            hoveredTile;
+
+            
+        hoveredTile = getThisTile(this);
+        // Get an array of movable tiles
+        movableInfo = getMovableInfo(hoveredTile);
+
+        // If it's movable make the border red
+        if (typeof movableInfo !== "undefined") {
+            // Make the border red
+            // pMovableInfo.slots[i].element.style.borderColor = "red";
+            this.style.borderColor = "red";
+            hoveredOver = true;
+        }
+    }
+
+    // Make the border black again
+    function onHoverExit(){
+        console.log("You've exited");
+        this.style.borderColor = "black";
+    }
+
     // Update the pixel location of the slot passed in.
     function updateSlotPosition(pSlot) {
         pSlot.element.style.top = (pSlot.y).toString() + "px";
@@ -222,8 +250,13 @@ var gameBoard = (function () {
         setBackgroundPosition(tile, colIndex, rowIndex);
         // Render the tile's displayText value.
         createTileDisplay(tile);
+        
         // Add the tile on click listener.
         tile.element.onclick = onTileClick;
+        // Add hovering listener
+        tile.element.onmouseenter = onHover;
+        tile.element.onmouseleave = onHoverExit;
+
         return tile;
     }
     
@@ -325,10 +358,8 @@ var gameBoard = (function () {
         initShuffle();
     };
 
-    
     return board;
-}());
-    
+}());    
 
 // Initialize the game board when the window has finished loading.
 (function () {
