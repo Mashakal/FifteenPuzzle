@@ -1,5 +1,5 @@
 /*global console*/
-/*jslint*/
+/*jslint */
 
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
@@ -13,6 +13,7 @@ var gameBoard = (function () {
         tileCount,                  // How many tiles should be made.
         emptySlot,                  // The empty slot on the board.
         shuffleButton,              // A reference to the game's shuffle button.
+        hoveredSlots,               // An array that holds the currently hovered slots.
         puzzleArea;                 // The div element that will hold the game board.
     
     // Always leave one empty slot for maneuvering tiles.
@@ -160,9 +161,11 @@ var gameBoard = (function () {
     }
 
     // Tiles that can move should have a red border
-    function onHover(){
+    function onHover() {
         var movableInfo,
-            hoveredTile; 
+            hoveredTile,
+            i;
+        
         // Get the tile properties from the one that was hovered over
         hoveredTile = getThisTile(this);
         // Get an array of movable tiles
@@ -170,17 +173,26 @@ var gameBoard = (function () {
 
         // If it's movable make the border red
         if (typeof movableInfo !== "undefined") {
-            // Make the border red
-            // pMovableInfo.slots[i].element.style.borderColor = "red";
-            this.style.borderColor = "red";
-            this.style.cursor = "pointer";
+            // Save the slots that are to be hovered so they can be unhihighlighted.
+            hoveredSlots = movableInfo.slots;
+            // Make the border red for each slot.
+            for (i = 0; i < hoveredSlots.length; i += 1) {
+                hoveredSlots[i].tile.element.style.borderColor = "red";
+                document.body.style.cursor = "pointer";
+            }
         }
     }
 
     // Make the border black again
     // Could only target the ones that were movable but this works for now
-    function onHoverExit(){
-        this.style.borderColor = "black";
+    function onHoverExit() {
+        var i;
+        // Revert the style back to their original.
+        for (i = 0; i < hoveredSlots.length; i += 1) {
+            hoveredSlots[i].tile.element.style.borderColor = "black";
+            document.body.style.cursor = "default";
+        }
+        
     }
 
     // Update the pixel location of the slot passed in.
@@ -249,6 +261,7 @@ var gameBoard = (function () {
         
         // Add the tile on click listener.
         tile.element.onclick = onTileClick;
+        tile.element.onmouseup = onHoverExit;
         // Add hovering listener
         tile.element.onmouseenter = onHover;
         tile.element.onmouseleave = onHoverExit;
@@ -355,7 +368,7 @@ var gameBoard = (function () {
     };
 
     return board;
-}());    
+}());
 
 // Initialize the game board when the window has finished loading.
 (function () {
