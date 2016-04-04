@@ -11,6 +11,7 @@ var gameBoard = (function () {
         colSlots = 4,               // How many slots are displayed per column.
         tileLength = 100,           // The width/height of a slot/tile in pixels.
         tileCount,                  // How many tiles should be made.
+        emptySlot,                  // The empty slot on the board.
         puzzleArea;                 // The div element that will hold the game board.
     
     // Always leave one empty slot for maneuvering tiles.
@@ -20,7 +21,6 @@ var gameBoard = (function () {
     /* PUBLIC VARIABLES */
     board.allTiles = [];            // Holds all tile objects.
     board.allSlots = [];            // Holds all the slots on the game board.
-    board.emptySlot = board.allSlots[tileCount];    // Last slot is always empty to start.
     
     
     /* PRIVATE FUNCTIONS */
@@ -28,6 +28,7 @@ var gameBoard = (function () {
     // Returns the tile object holding the tile element that was clicked on.
     function getThisTile(pElement) {
         var i;      // Loop variable
+        
         // Search the tile's array for pElement
         for (i = 0; i < board.allTiles.length; i += 1) {
             if (board.allTiles[i].element === pElement) {
@@ -37,86 +38,106 @@ var gameBoard = (function () {
         return undefined;
     }
     
-    // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
-    function getMoveableTiles(pTile) {
-        var i;   //Loop variable
-        console.log("Movable tiles for tile " + pTile);
-        // Check 3 sides for the following 4 ifs
-        if(pTile.row === 0){
-            // Don't check any higher, top row
-            if(pTile.row + 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else if(ptile.column + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(pTile.column - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else{
-                // no empty slot found
-            }
-        } else if(pTile.row === 3){
-            // don't check any lower, bottom row
-            if(pTile.row - 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(ptile.column + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(pTile.column - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else{
-                // no empty slot found
-            }
-        }else if(pTile.column === 0){
-            // don't check to the left, first column
-            if(pTile.row + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(pTile.row - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else if(ptile.column + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else{
-                // no empty slot found
-            }
-        }else if(pTile.column === 3){
-            // don't check to the right, last
-            if(pTile.row + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(pTile.row - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else if(pTile.column - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else{
-                // no empty slot found
-            }
-        }else{ // check all 4 sides of the tile
-            if(pTile.row + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(pTile.row - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else if(ptile.column + 1 === emptySlot){
-                // found empty slot at (row + 1, column)
-            }else if(pTile.column - 1 === emptySlot){
-                // found empty slot at (row - 1, column)
-            }else{
-                // no empty slot found
+    
+    // THIS FUNCTION IS PROBABLY NOT NECESSARY.
+    // Returns the slot that holds the passed in tile object or undefined if the tile is not found.
+    function getSlotGivenTile(pTile) {
+        var i;      // Loop variable.
+        
+        // Search the slots array until we find the slot holding the tile object.
+        for (i = 0; i < board.allSlots; i += 1) {
+            if (board.allSlots[i].tile === pTile) {
+                return board.allSlots[i];
             }
         }
+        return undefined;
     }
     
+    
+    // Returns the slot located at position pRow, pColumn.
+    function getSlotGivenIndices(pRow, pColumn) {
+        return board.allSlots[pRow * colSlots + pColumn];
+    }
+    
+    // Returns an array of tile elements that are legally allowed to be moved, based on a tile element that was clicked on.
+    function getMovableInfo(pTile) {
+        var info = {},      // The object to be returned.
+            slots = [],     // All the slots that hold movable tiles.
+            direction = {}, // Which direction to move the tiles, if they are movable.
+            numSlots,       // How many slots are between the one clicked and the empty slot.
+            delta,          // Either 1 or -1, depending on the empty slot being farther up/down or left/right of pTile.
+            i;              // Loop variable.
+        
+        // Initialize the direction object.
+        direction.x = 0;
+        direction.y = 0;
+        
+        // Be certain the tile clicked on is itself moveable.
+        // Check if pTile and emptySlot are in the same row.
+        if (pTile.currentRow === emptySlot.row) {
+            // Add the slot that holds pTile the array of moveable tile's slots.
+            slots.push(board.allSlots[pTile.currentSlot]);
+            // How many slots hold tiles between pTile and emptySlot, including pTile.
+            numSlots = Math.abs((emptySlot.column - pTile.currentColumn));
+            // Determine delta based on emptySlot being farther left or right.
+            delta = emptySlot.column - pTile.currentColumn > 0 ? 1 : -1;
+            // Add additional movable tile's slots that are also in this row.
+            for (i = 1; i < numSlots; i += 1) {
+                slots.push(getSlotGivenIndices(pTile.currentRow, pTile.currentColumn + delta * i));
+            }
+            // Set the direction value for movement between rows.
+            direction.x = delta;
+        // Check if pTile and emptySlot are in the same column.
+        } else if (pTile.currentColumn === emptySlot.column) {
+            // Add the slot that holds pTile to the array of moveable slots.
+            slots.push(board.allSlots[pTile.currentSlot]);
+            // How many slots hold tiles between pTile and emptySlot, including pTile.
+            numSlots = Math.abs((emptySlot.row - pTile.currentRow));
+            // Determine delta based on emptySlot being farther up or down.
+            delta = emptySlot.row - pTile.currentRow > 0 ? 1 : -1;
+            console.log("Delta is: " + delta);
+            // Add additional moveable tile's slots that are also in this column.
+            for (i = 1; i < numSlots; i += 1) {
+                console.log(pTile.currentRow + delta * i);
+                slots.push(getSlotGivenIndices(pTile.currentRow + delta * i, pTile.currentColumn));
+            }
+            // Set the direction for movement between columns.
+            direction.y = delta;
+        } else {
+            // This tile is not moveable, return undefined.
+            return undefined;
+        }
+        
+        info.slots = slots;
+        info.direction = direction;
+        return info;
+    }
+
+    
     // Moves the tiles.
-    function moveTiles(pTiles) {
+    function moveTiles(pMovableInfo) {
         
     }
     
     // Called when a tile element is clicked on.
     function onTileClick() {
-        console.log("Clicked!");
-        // Find the appropriate tile object.
-        var clickedTile = getThisTile(this);
-        console.log(clickedTile);
-        var clickedTileNumber = clickedTile.displayText
-        // Determine moveable tiles.
-        getMoveableTiles(clickedTileNumber);
+        var clickedTile,        // The object that holds the tile element that was clicked on.
+            movableInfo;        // An object that holds an array of movable tile's slots and a direction object.
+        
+        // Find the tile object related to the tile element that was clicked on.
+        clickedTile = getThisTile(this);
+        // Get movable information.
+        movableInfo = getMovableInfo(clickedTile);
+        console.log(movableInfo);
         // If there are moveable tiles, move them.
         // moveTiles(); // this function should update which slots the tiles are in now, may require a helper function.        
+    }
+    
+    
+    // Update the pixel location of the slot passed in.
+    function updateSlotPosition(pSlot) {
+        pSlot.element.style.top = (pSlot.y).toString() + "px";
+        pSlot.element.style.left = (pSlot.x).toString() + "px";
     }
     
     // Create slots for the board.
@@ -128,11 +149,14 @@ var gameBoard = (function () {
         slot.element.setAttribute("class", "slot");
         // Index is always equal to the position within allSlots array.
         slot.index = board.allSlots.length;
+        // Remember the row and column index for this slot.
+        slot.row = rowIndex;
+        slot.column = colIndex;
         // Set the position of this slot based on its column and row indices.
         slot.x = (colIndex % colSlots) * tileLength;
         slot.y = (rowIndex % rowSlots) * tileLength;
         // Update the position of this slot within the parent.
-        board.updateSlotPosition(slot);
+        updateSlotPosition(slot);
         return slot;
     }
     
@@ -169,6 +193,9 @@ var gameBoard = (function () {
         tile.currentSlot = board.allTiles.length;
         // Index starts at 0, value starts at 1.
         tile.displayText = (board.allTiles.length + 1).toString();
+        // Set the current row and column index for this tile.
+        tile.currentRow = rowIndex;
+        tile.currentColumn = colIndex;
         // Set the background position for this tile.
         setBackgroundPosition(tile, colIndex, rowIndex);
         // Render the tile's displayText value.
@@ -193,6 +220,8 @@ var gameBoard = (function () {
                 board.allSlots.push(slot);
             }
         }
+        // The last slot is always the empty slot to start.
+        emptySlot = board.allSlots[tileCount];
     }
     
     
@@ -229,13 +258,6 @@ var gameBoard = (function () {
     };
     
     
-    // Update the pixel location of the slot passed in.
-    board.updateSlotPosition = function (pSlot) {
-        pSlot.element.style.top = (pSlot.y).toString() + "px";
-        pSlot.element.style.left = (pSlot.x).toString() + "px";
-    };
-    
-    
     return board;
 }());
     
@@ -251,5 +273,4 @@ var gameBoard = (function () {
         gameBoard.init(boardId);
     };
 
-    
 }());
