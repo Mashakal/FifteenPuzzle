@@ -1,26 +1,40 @@
 /*global console*/
 /*jslint*/
 
-function addButtons(){
+function addButtons() {
     "use strict";
 
     var buttonHolder = [],
-    i;
+    i,
+    linkAttribute,
+    imgAttribute;
     // Get the div created for output
-    var addButtonsHere = document.getElementById("output");
-    buttonHolder[0] = document.createElement("BUTTONS");
-    buttonHolder[1] = document.createElement("BUTTONS");
-    buttonHolder[2] =  document.createElement("BUTTONS");
+    var buttonDiv = document.createElement("DIV");
 
-    //     cssValidationButton 
-    // htmlValidationButton
-    // JSValidationButton 
-    for(i=0; i < buttonHolder.length; i+=1){
-    // Add these properties to all of the buttons
-    buttonHolder[i].className = "buttons";
-    addButtonsHere.appendChild(buttonHolder[i]); 
-     
+    for(i=0; i<3;i++){
+        buttonHolder[i] = document.createElement("A");
+        imgAttribute = document.createElement("IMG");
+
+        imgAttribute.className = "validations";
+        if(0 === i%3){
+            // htmlValidationButton
+            imgAttribute.setAttribute("src", "Images/valid-html.png");
+            imgAttribute.setAttribute("alt", "html validation");
+        }else if(1 === i%3){
+            // cssValidationButton 
+            imgAttribute.setAttribute("src", "Images/valid-css.png");
+            imgAttribute.setAttribute("alt", "css validation");
+        }else if(2 === i%3){
+            // JSValidationButton 
+            imgAttribute.setAttribute("src", "Images/jslint.png");
+            imgAttribute.setAttribute("alt", "JS validation");
+        }
+        
+        buttonHolder[i].appendChild(imgAttribute);
+        // buttonHolder[i] = linkAttribute;
+        buttonDiv.appendChild(buttonHolder[i]);
     }
+    document.body.appendChild(buttonDiv);
 }
 
 // Obtain an object representing the puzzle/game board.
@@ -35,6 +49,7 @@ var gameBoard = (function () {
         tileCount,                  // How many tiles should be made.
         emptySlot,                  // The empty slot on the board.
         shuffleButton,              // A reference to the game's shuffle button.
+        checkIfGameWon = false,
         hoveredSlots = {},               // An array that holds the currently hovered slots.
         puzzleArea;                 // The div element that will hold the game board.
     
@@ -211,7 +226,7 @@ var gameBoard = (function () {
         var i;
         // Revert the style back to their original.
         for (i = 0; i < hoveredSlots.length; i += 1) {
-            hoveredSlots[i].element.tile.style.borderColor = "black";
+            hoveredSlots[i].tile.element.style.borderColor = "black";
             document.body.style.cursor = "default";
         }
         
@@ -362,6 +377,7 @@ var gameBoard = (function () {
         
         // The onclick listener for the shuffle button.
         shuffleButton.onclick = function () {
+            checkIfGameWon = true;
             for (i = 0; i < swapIterations; i += 1) {
                 // Find adjacent slots.
                 eligibleSlots = getAdjacentSlots(emptySlot);
@@ -371,6 +387,12 @@ var gameBoard = (function () {
                 swapWithEmpty(slotToSwap);
             }
         };
+    }
+    // If game 
+    function checkIfGameWonFunc(){
+        if(checkIfGameWon === true){
+            // Go through board and check to make sure pieces are in the correct slot
+        }
     }
     
     
