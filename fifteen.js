@@ -1,5 +1,27 @@
 /*global console*/
-/*jslint */
+/*jslint*/
+
+function addButtons(){
+    "use strict";
+
+    var buttonHolder = [],
+    i;
+    // Get the div created for output
+    var addButtonsHere = document.getElementById("output");
+    buttonHolder[0] = document.createElement("BUTTONS");
+    buttonHolder[1] = document.createElement("BUTTONS");
+    buttonHolder[2] =  document.createElement("BUTTONS");
+
+    //     cssValidationButton 
+    // htmlValidationButton
+    // JSValidationButton 
+    for(i=0; i < buttonHolder.length; i+=1){
+    // Add these properties to all of the buttons
+    buttonHolder[i].className = "buttons";
+    addButtonsHere.appendChild(buttonHolder[i]); 
+     
+    }
+}
 
 // Obtain an object representing the puzzle/game board.
 var gameBoard = (function () {
@@ -13,7 +35,7 @@ var gameBoard = (function () {
         tileCount,                  // How many tiles should be made.
         emptySlot,                  // The empty slot on the board.
         shuffleButton,              // A reference to the game's shuffle button.
-        hoveredSlots,               // An array that holds the currently hovered slots.
+        hoveredSlots = {},               // An array that holds the currently hovered slots.
         puzzleArea;                 // The div element that will hold the game board.
     
     // Always leave one empty slot for maneuvering tiles.
@@ -189,7 +211,7 @@ var gameBoard = (function () {
         var i;
         // Revert the style back to their original.
         for (i = 0; i < hoveredSlots.length; i += 1) {
-            hoveredSlots[i].tile.element.style.borderColor = "black";
+            hoveredSlots[i].element.tile.style.borderColor = "black";
             document.body.style.cursor = "default";
         }
         
@@ -375,6 +397,7 @@ var gameBoard = (function () {
     "use strict";
     
     window.onload = function () {
+        addButtons();
         var boardId = "puzzlearea",         // The element ID of the board div.
             shuffleId = "shufflebutton";    // The shuffle button of the game board.
         
