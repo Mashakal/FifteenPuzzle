@@ -1,6 +1,7 @@
 /*global console*/
 /*jslint*/
 
+// Add the validation buttons to the end of the page
 function addButtons() {
     "use strict";
 
@@ -195,6 +196,7 @@ var gameBoard = (function () {
         if (typeof movableInfo !== "undefined") {
             moveTiles(movableInfo);
         }
+        checkIfGameWonFunc();
     }
 
     // Tiles that can move should have a red border
@@ -377,24 +379,39 @@ var gameBoard = (function () {
         
         // The onclick listener for the shuffle button.
         shuffleButton.onclick = function () {
-            checkIfGameWon = true;
             for (i = 0; i < swapIterations; i += 1) {
                 // Find adjacent slots.
                 eligibleSlots = getAdjacentSlots(emptySlot);
-                console.log(eligibleSlots);
+                // console.log(eligibleSlots);
                 // Choose one at random.
                 slotToSwap = eligibleSlots[Math.floor(Math.random() * eligibleSlots.length)];
                 swapWithEmpty(slotToSwap);
             }
         };
-    }
-    // If game 
+    }    
+    // If game is won, tell the user
     function checkIfGameWonFunc(){
-        if(checkIfGameWon === true){
-            // Go through board and check to make sure pieces are in the correct slot
+        var correctBoards=0;   //keep track of correct boards
+        // console.log(board.allSlots[15]);
+
+        // Go through board and check to make sure pieces are in the correct slot
+        // If the empty slot is where it's supposed to win, check the rest of the board
+        if(board.allSlots[15].tile === undefined){
+            // Check to see if the rest of the board is correct
+            for (var i = 0; i < board.allSlots.length - 1; i += 1) {
+                // If it's in the correct spot the add to correctBoards
+                if(board.allSlots[i].element.innerText == i+1){
+                    correctBoards += 1;
+                    console.log(board.allSlots[i].element.innerText + " " + i);
+                }
+            }
+            // If all slots are correct then player wins!
+            if(correctBoards == 15){
+                window.alert("You win!");    
+            }
         }
+        correctBoards = 0;
     }
-    
     
     /* PUBLIC FUNCTIONS */
     
