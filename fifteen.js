@@ -20,14 +20,17 @@ function addButtons() {
         if(0 === i%3){
             // htmlValidationButton
             imgAttribute.setAttribute("src", "Images/valid-html.png");
+            buttonHolder[i].href = "https://validator.w3.org/nu/?doc=http%3A%2F%2Fmashakal.github.io%2FFifteenPuzzle%2F";
             imgAttribute.setAttribute("alt", "html validation");
         }else if(1 === i%3){
             // cssValidationButton 
             imgAttribute.setAttribute("src", "Images/valid-css.png");
+            buttonHolder[i].href = "https://jigsaw.w3.org/css-validator/validator?uri=http%3A%2F%2Fmashakal.github.io%2FFifteenPuzzle%2F&profile=css3&usermedium=all&warning=1&vextwarning=&lang=en";
             imgAttribute.setAttribute("alt", "css validation");
         }else if(2 === i%3){
             // JSValidationButton 
             imgAttribute.setAttribute("src", "Images/jslint.png");
+            buttonHolder[i].href = "http://www.jslint.com/";
             imgAttribute.setAttribute("alt", "JS validation");
         }
         
