@@ -15,4 +15,5 @@ Alma worked on: <br>
   * getting the validation buttons to show up using JS
   * added the correct CSS required from the instructions
   * changed the cursor and border color when hovering
+  * Added function that checks to see if player won the game
   * Setting up the github website for the project which can be found at <br> http://mashakal.github.io/FifteenPuzzle/
