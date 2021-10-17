@@ -1,19 +1,19 @@
-# FifteenPuzzle
-Homework 5 - Web Programming <br>
-This project has been completed by Alex Neuenkirk and Alma Sanchez. <br>
+# FifteenPuzzle - Web Programming - Homework 5
+http://mashakal.github.io/FifteenPuzzle 
+By: Alex Neuenkirk & Alma Sanchez
 
-Alex worked on: <br>
-  * setting up the board
-  * getting the correct background images to display 
+Alex worked on:
+  * Setting up the board
+  * Getting the correct background images to display 
   * Moving the tiles from the list of movable slots 
-  * Getting multiple tiles to move
-  * Changed the hovering action to be applied to the extra feature of being able to move a whole row
-  * implemented shuffling functionality
-  <br>
-Alma worked on: <br>
-  * the function that returns a list of movable slots
-  * getting the validation buttons to show up using JS
-  * added the correct CSS required from the instructions
-  * changed the cursor and border color when hovering
-  * Added function that checks to see if player won the game
-  * Setting up the github website for the project which can be found at <br> http://mashakal.github.io/FifteenPuzzle/
+  * Function to move multiple tiles
+  * Applying the hover action and being able to move a whole row
+  * Implementing tile shuffle functionality
+
+Alma worked on:
+  * Function returning a list of movable slots
+  * Adding HTML, CSS and JS validation buttons
+  * Adding CSS that adhered to assignment instructions
+  * Customizing mouse cursor and tile border color when hovering
+  * Writing a function that checks to see if the player won the game
+  * Setting up the github website for the project
